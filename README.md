@@ -1,4 +1,4 @@
-# Automate repetitive tasks with python3
+# Automate repetitive keyboard and mouse tasks with python3
 
 ### William Lamb 09/22/18
 
