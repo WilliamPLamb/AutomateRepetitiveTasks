@@ -14,31 +14,74 @@ from pynput import mouse
 #######################################
 # Define functions
 
+# Boolean to send log data or not
+logging = bool(True);
+
+# Array to hold currently-pressed keys
+keysPressed = [];
+
 # Mouse logger
 def on_move(x, y):
-    print('Pointer moved to {0}'.format((x, y)));
+    if(logging):
+        print('Pointer moved to {0}'.format((x, y)));
 
 def on_click(x, y, button, pressed):
-    print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)));
-    if not pressed:
-        # Stop listener
-        return False;
+    if(logging):
+        print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)));
+        # Original code to stop mouse logger
+        # if not pressed:
+        #     # Stop listener
+        #     return False;
 
 def on_scroll(x, y, dx, dy):
-    print('Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)));
+    if(logging):
+        print('Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)));
 
 # Keyboard logger
+def checkLogging():
+    if(keyboard.Key.ctrl in keysPressed and 'c' in keysPressed):
+        logging = not logging;
+
 def on_press(key):
-    try:
-        print('alphanumeric key {0} pressed'.format(key.char));
-    except AttributeError:
-        print('special key {0} pressed'.format(key));
+    # TODO figure out difference between key.char and key
+    # Add key to pressed list
+    keysPressed.append(key);
+    # DEBUG: look at keysPressed list
+    print("keysPressed length: ");
+    print(len(keysPressed));
+    print("\n");
+    for item in keysPressed:
+        print("keysPressed: ");
+        print(item);
+    print("\n");
+    # endDebug
+    # TODO add checkLogging function in
+    # Send key to log
+    if(logging):
+        try:
+            print('alphanumeric key {0} pressed'.format(key.char));
+        except AttributeError:
+            print('special key {0} pressed'.format(key));
 
 def on_release(key):
-    print('{0} released'.format(key));
-    if key == keyboard.Key.esc:
-        # Stop listener
-        return False;
+    # Remove key from pressed list
+    global keysPressed; # Need global because assignment would mistake for local variable of same name
+    keysPressed = list(filter(lambda a: a != key, keysPressed))
+    # DEBUG: look at keysPressed list
+    # print("keysPressed length: ");
+    # print(len(keysPressed));
+    # print("\n");
+    # for item in keysPressed:
+    #     print("keysPressed: ");
+    #     print(item);
+    # print("\n");
+    # endDebug
+    if(logging):
+        print('{0} released'.format(key));
+        # Original code to stop keyboard logger
+        # if key == keyboard.Key.esc:
+        #     # Stop listener
+        #     return False;
 
 
 #######################################
@@ -51,19 +94,19 @@ print("Press Ctrl-X to stop logging")
 print("Press Ctrl-V to start playback")
 print("Press Ctrl-C to quit at any time")
 
+ # If I don't want to break formatting then I should use contextlib.ExitStack as seen here: https://stackoverflow.com/questions/31039022/python-multi-line-with-statement
 # Construct keyboard and mouse listeners
 with keyboard.Listener(
         on_press=on_press,
-        on_release=on_release) as kListener,
-    mouse.Listener(
+        on_release=on_release) as kListener, mouse.Listener(
         on_move=on_move,
         on_click=on_click,
         on_scroll=on_scroll) as mListener:
     # Log with keyboard interrupt as exception
     try:
         print("Logging")
-        keyListener.join();
-        mouseListener.join();
+        kListener.join();
+        mListener.join();
 
         # while True:
         #     sleep(0.05);
