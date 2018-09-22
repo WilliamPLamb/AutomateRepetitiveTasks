@@ -25,10 +25,10 @@ def on_scroll(x, y, dx, dy):
 with mouse.Listener(
         on_move=on_move,
         on_click=on_click,
-        on_scroll=on_scroll) as listener:
+        on_scroll=on_scroll) as mouseListener:
     try:
         print("Starting program")
-        listener.join();
+        mouseListener.join();
     except KeyboardInterrupt:
         print("\nExiting Program");
         quit();
