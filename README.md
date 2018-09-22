@@ -3,6 +3,7 @@
 ### William Lamb 09/22/18
 
 For Mac using python3
+On Mac the keylogger portion needs sudo privileges to capture non-special characters.
 
 ##### Dependencies:
 - pyautogui
