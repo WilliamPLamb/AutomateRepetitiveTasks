@@ -1,7 +1,10 @@
 #! /usr/bin/env python3
+# William Lamb
+# 9/22/18
+# williamplamb@gmail.com
 
 import pyautogui as pag
-
+from pynput import keyboard
 from time import sleep
 
 print("Press Ctrl-X to start recording")
@@ -17,9 +20,12 @@ print("Press Ctrl-C to quit")
 
 try:
     while True:
-        sleep(0.05)
+        sleep(0.05);
+        if()
+
 except KeyboardInterrupt:
-    print("\nStarting Recording")
+    print("\nQuitting");
+    quit();
 
 #Record
 #class to store data
