@@ -13,7 +13,7 @@ On Mac the keylogger portion needs sudo privileges to capture non-special charac
 This project is not intended for use in any illegal or nefarious way, rather only to provide a simple method of automating recurring, identical tasks.
 
 #### TODO:
-- remove mouse logger exit on click and keyboard logger exit on esc
+- Encapsulate key and mouse loggers into single class
 - send log to text file with each new action on a new line
 - interpret text file back into actions
 - implement saving logs to file to store for later recall
