@@ -20,15 +20,26 @@ debug = bool(False);
 # Boolean to send log data or not
 logging = bool(False);
 
+# Boolean to flag quit
+quitFlag = bool(False);
+
 # Array to hold currently-pressed keys
 keysPressed = [];
 
 # Mouse logger
 def on_move(x, y):
+    # Check if keys to quit have been pressed
+    checkQuit();
+    if(quitFlag):
+        return False;
     if(logging):
         print('Pointer moved to {0}'.format((x, y)));
 
 def on_click(x, y, button, pressed):
+    # Check if keys to quit have been pressed
+    checkQuit();
+    if(quitFlag):
+        return False;
     if(logging):
         print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)));
         # Original code to stop mouse logger
@@ -37,10 +48,15 @@ def on_click(x, y, button, pressed):
         #     return False;
 
 def on_scroll(x, y, dx, dy):
+    # Check if keys to quit have been pressed
+    checkQuit();
+    if(quitFlag):
+        return False;
     if(logging):
         print('Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)));
 
 # Keyboard logger
+# Check to turn logging on/off
 def checkLogging():
     if(keyboard.Key.ctrl in keysPressed and 'x' in keysPressed):
         global logging; # Need global keyword before assignment
@@ -49,6 +65,13 @@ def checkLogging():
             print("Logging\n");
         else:
             print("Not Logging\n");
+
+def checkQuit():
+    if(keyboard.Key.ctrl in keysPressed and 'c' in keysPressed):
+        global quitFlag;
+        quitFlag = True;
+        # print("quitFlag triggered\n")
+
 
 def on_press(key):
     # Add key to pressed list
@@ -59,6 +82,10 @@ def on_press(key):
 
     # Check whether to turn on/off logging
     checkLogging();
+    # Check whether to quit or not
+    checkQuit();
+    if(quitFlag):
+        return False;
 
     # DEBUG: look at keysPressed list
     if(debug):
@@ -119,16 +146,15 @@ print("Press Ctrl-C to quit at any time")
 # Construct keyboard and mouse listeners
 with keyboard.Listener(
         on_press=on_press,
-        on_release=on_release) as kListener:
-        # , mouse.Listener(
-        # on_move=on_move,
-        # on_click=on_click,
-        # on_scroll=on_scroll) as mListener
+        on_release=on_release) as kListener, mouse.Listener(
+        on_move=on_move,
+        on_click=on_click,
+        on_scroll=on_scroll) as mListener:
     # Log with keyboard interrupt as exception
     try:
         print("Listeners Started")
         kListener.join();
-        # mListener.join();
+        mListener.join();
 
         # while True:
         #     sleep(0.05);
