@@ -14,8 +14,11 @@ from pynput import mouse
 #######################################
 # Define functions
 
+# DEBUG boolean for testing
+debug = bool(False);
+
 # Boolean to send log data or not
-logging = bool(True);
+logging = bool(False);
 
 # Array to hold currently-pressed keys
 keysPressed = [];
@@ -39,21 +42,35 @@ def on_scroll(x, y, dx, dy):
 
 # Keyboard logger
 def checkLogging():
-    if(keyboard.Key.ctrl in keysPressed and 'c' in keysPressed):
+    if(keyboard.Key.ctrl in keysPressed and 'x' in keysPressed):
+        global logging; # Need global keyword before assignment
         logging = not logging;
+        if logging:
+            print("Logging\n");
+        else:
+            print("Not Logging\n");
 
 def on_press(key):
-    # TODO figure out difference between key.char and key
     # Add key to pressed list
-    keysPressed.append(key);
+    try: # In case key is alphanumeric
+        keysPressed.append(key.char);
+    except AttributeError: # In case key is special
+        keysPressed.append(key);
+
+    # Check whether to turn on/off logging
+    checkLogging();
+
     # DEBUG: look at keysPressed list
-    print("keysPressed length: ");
-    print(len(keysPressed));
-    print("\n");
-    for item in keysPressed:
-        print("keysPressed: ");
-        print(item);
-    print("\n");
+    if(debug):
+        print("keysPressed length: ");
+        print(len(keysPressed));
+        print("\n");
+        for item in keysPressed:
+            print("keysPressed: ");
+            print(item);
+            print("type: ");
+            print(type(item));
+        print("\n");
     # endDebug
     # TODO add checkLogging function in
     # Send key to log
@@ -66,15 +83,19 @@ def on_press(key):
 def on_release(key):
     # Remove key from pressed list
     global keysPressed; # Need global because assignment would mistake for local variable of same name
-    keysPressed = list(filter(lambda a: a != key, keysPressed))
+    try: # In case key is alphanumeric
+        keysPressed = list(filter(lambda a: a != key.char, keysPressed));
+    except AttributeError: # In case key is special
+        keysPressed = list(filter(lambda a: a != key, keysPressed));
     # DEBUG: look at keysPressed list
-    # print("keysPressed length: ");
-    # print(len(keysPressed));
-    # print("\n");
-    # for item in keysPressed:
-    #     print("keysPressed: ");
-    #     print(item);
-    # print("\n");
+    if(debug):
+        print("keysPressed length: ");
+        print(len(keysPressed));
+        print("\n");
+        for item in keysPressed:
+            print("keysPressed: ");
+            print(item);
+        print("\n");
     # endDebug
     if(logging):
         print('{0} released'.format(key));
@@ -98,15 +119,16 @@ print("Press Ctrl-C to quit at any time")
 # Construct keyboard and mouse listeners
 with keyboard.Listener(
         on_press=on_press,
-        on_release=on_release) as kListener, mouse.Listener(
-        on_move=on_move,
-        on_click=on_click,
-        on_scroll=on_scroll) as mListener:
+        on_release=on_release) as kListener:
+        # , mouse.Listener(
+        # on_move=on_move,
+        # on_click=on_click,
+        # on_scroll=on_scroll) as mListener
     # Log with keyboard interrupt as exception
     try:
-        print("Logging")
+        print("Listeners Started")
         kListener.join();
-        mListener.join();
+        # mListener.join();
 
         # while True:
         #     sleep(0.05);
