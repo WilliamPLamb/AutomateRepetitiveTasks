@@ -30,6 +30,9 @@ keysPressed = [];
 # Timer to log when actions happen
 startTime = time.time();
 
+# Declare file for I/O
+file = open("log.txt", "w");
+
 # Mouse logger
 def on_move(x, y):
     # Check if keys to quit have been pressed
@@ -37,9 +40,16 @@ def on_move(x, y):
     if(quitFlag):
         return False;
     if(logging):
+        # Check what time the action occurred
         actionTime = time.time() - startTime;
-        timeLog = "Time: {}: ".format(actionTime);
-        print(timeLog + 'Pointer moved to {0}'.format((x, y)));
+        logMessage = "Time: {}: ".format(actionTime) + 'Pointer moved to {0}'.format((x, y));
+        # Output to console
+        print(logMessage);
+        # Write to file
+        try:
+            file.write(logMessage + "\n");
+        except AttributeError:
+            print("File write error");
 
 def on_click(x, y, button, pressed):
     # Check if keys to quit have been pressed
@@ -47,9 +57,16 @@ def on_click(x, y, button, pressed):
     if(quitFlag):
         return False;
     if(logging):
+        # Check what time the action occurred
         actionTime = time.time() - startTime;
-        timeLog = "Time: {}: ".format(actionTime);
-        print(timeLog + '{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)));
+        logMessage = "Time: {}: ".format(actionTime) + '{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y));
+        # Output to console
+        print(logMessage);
+        # Write to file
+        try:
+            file.write(logMessage + "\n");
+        except AttributeError:
+            print("File write error");
         # Original code to stop mouse logger
         # if not pressed:
         #     # Stop listener
@@ -61,9 +78,17 @@ def on_scroll(x, y, dx, dy):
     if(quitFlag):
         return False;
     if(logging):
+        # Check what time the action occurred
         actionTime = time.time() - startTime;
-        timeLog = "Time: {}: ".format(actionTime);
-        print(timeLog + 'Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)));
+        logMessage = "Time: {}: ".format(actionTime) + 'Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y));
+        # Output to console
+        print(logMessage);
+        # Write to file
+        try:
+            file.write(logMessage + "\n");
+        except AttributeError:
+            print("File write error");
+
 
 # Keyboard logger
 # Check to turn logging on/off
@@ -118,12 +143,28 @@ def on_press(key):
     # Send key to log
     if(logging):
         actionTime = time.time() - startTime;
+        # if just started logging, say first keypress is at time 0
         if (actionTime < 0.001): actionTime = 0;
         timeLog = "Time: {}: ".format(actionTime);
         try:
-            print(timeLog + 'alphanumeric key {0} pressed'.format(key.char));
+            logMessage = timeLog + 'alphanumeric key {0} pressed'.format(key.char);
+            # Output to console
+            print(logMessage);
+            # Write to file
+            try:
+                file.write(logMessage + "\n");
+            except AttributeError:
+                print("File write error");
         except AttributeError:
-            print(timeLog + 'special key {0} pressed'.format(key));
+            logMessage = timeLog + 'special key {0} pressed'.format(key);
+            # Output to console
+            print(logMessage);
+            # Write to file
+            try:
+                file.write(logMessage + "\n");
+            except AttributeError:
+                print("File write error");
+
 
 def on_release(key):
     # Remove key from pressed list
@@ -144,8 +185,14 @@ def on_release(key):
     # endDebug
     if(logging):
         actionTime = time.time() - startTime;
-        timeLog = "Time: {}: ".format(actionTime);
-        print(timeLog + '{0} released'.format(key));
+        logMessage = "Time: {}: ".format(actionTime) + '{0} released'.format(key);
+        # Output to console
+        print(logMessage);
+        # Write to file
+        try:
+            file.write(logMessage + "\n");
+        except AttributeError:
+            print("File write error");
         # Original code to stop keyboard logger
         # if key == keyboard.Key.esc:
         #     # Stop listener
@@ -182,6 +229,7 @@ with keyboard.Listener(
 
     except KeyboardInterrupt:
         print("\nExiting Program");
+        file.close();
         quit();
 
 # Playback

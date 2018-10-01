@@ -1,3 +1,6 @@
+# Personal log file used for testing
+log.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
