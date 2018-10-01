@@ -9,6 +9,7 @@
 # import pyautogui as pag
 from pynput import keyboard
 from pynput import mouse
+import time
 # from time import sleep
 
 #######################################
@@ -26,6 +27,9 @@ quitFlag = bool(False);
 # Array to hold currently-pressed keys
 keysPressed = [];
 
+# Timer to log when actions happen
+startTime = time.time();
+
 # Mouse logger
 def on_move(x, y):
     # Check if keys to quit have been pressed
@@ -33,7 +37,9 @@ def on_move(x, y):
     if(quitFlag):
         return False;
     if(logging):
-        print('Pointer moved to {0}'.format((x, y)));
+        actionTime = time.time() - startTime;
+        timeLog = "Time: {}: ".format(actionTime);
+        print(timeLog + 'Pointer moved to {0}'.format((x, y)));
 
 def on_click(x, y, button, pressed):
     # Check if keys to quit have been pressed
@@ -41,7 +47,9 @@ def on_click(x, y, button, pressed):
     if(quitFlag):
         return False;
     if(logging):
-        print('{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)));
+        actionTime = time.time() - startTime;
+        timeLog = "Time: {}: ".format(actionTime);
+        print(timeLog + '{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y)));
         # Original code to stop mouse logger
         # if not pressed:
         #     # Stop listener
@@ -53,7 +61,9 @@ def on_scroll(x, y, dx, dy):
     if(quitFlag):
         return False;
     if(logging):
-        print('Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)));
+        actionTime = time.time() - startTime;
+        timeLog = "Time: {}: ".format(actionTime);
+        print(timeLog + 'Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y)));
 
 # Keyboard logger
 # Check to turn logging on/off
@@ -63,8 +73,13 @@ def checkLogging():
         logging = not logging;
         if logging:
             print("Logging\n");
+            print("Timer Started\n");
+            global startTime;
+            startTime = time.time();
+
         else:
             print("Not Logging\n");
+            print("Timer Stopped\n");
 
 def checkQuit():
     if(keyboard.Key.ctrl in keysPressed and 'c' in keysPressed):
@@ -102,10 +117,13 @@ def on_press(key):
     # TODO add checkLogging function in
     # Send key to log
     if(logging):
+        actionTime = time.time() - startTime;
+        if (actionTime < 0.001): actionTime = 0;
+        timeLog = "Time: {}: ".format(actionTime);
         try:
-            print('alphanumeric key {0} pressed'.format(key.char));
+            print(timeLog + 'alphanumeric key {0} pressed'.format(key.char));
         except AttributeError:
-            print('special key {0} pressed'.format(key));
+            print(timeLog + 'special key {0} pressed'.format(key));
 
 def on_release(key):
     # Remove key from pressed list
@@ -125,7 +143,9 @@ def on_release(key):
         print("\n");
     # endDebug
     if(logging):
-        print('{0} released'.format(key));
+        actionTime = time.time() - startTime;
+        timeLog = "Time: {}: ".format(actionTime);
+        print(timeLog + '{0} released'.format(key));
         # Original code to stop keyboard logger
         # if key == keyboard.Key.esc:
         #     # Stop listener

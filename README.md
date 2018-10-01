@@ -16,7 +16,6 @@ This project is not intended for use in any illegal or nefarious way, rather onl
 - for an alphanumeric key, the `key` variable returns the key in single quotation marks, like `'a'`. For an alphanumeric key using `key.char` the key returns just as is, like `a`.
 
 #### TODO:
-- Write a timer class
 - Writing characters with combinations like option-c (which outputs ç) and then letting go of option before c doesn't clear the ç character. Should letting go of the option key clear the entire keysPressed list? Should there be a track of how many keypresses before a key is released, and return an array with that many items cut from the end?
 - Encapsulate key and mouse loggers into single class
 - send log to text file with each new action on a new line
