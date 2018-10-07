@@ -29,6 +29,7 @@ keysPressed = [];
 
 # Timer to log when actions happen
 startTime = time.time();
+runTime = float(0);
 
 # Declare file for I/O
 file = open("log.txt", "w");
@@ -41,7 +42,7 @@ def on_move(x, y):
         return False;
     if(logging):
         # Check what time the action occurred
-        actionTime = time.time() - startTime;
+        actionTime = time.time() - startTime + runTime;
         logMessage = "Time: {}: ".format(actionTime) + 'Pointer moved to {0}'.format((x, y));
         # Output to console
         print(logMessage);
@@ -58,7 +59,7 @@ def on_click(x, y, button, pressed):
         return False;
     if(logging):
         # Check what time the action occurred
-        actionTime = time.time() - startTime;
+        actionTime = time.time() - startTime + runTime;
         logMessage = "Time: {}: ".format(actionTime) + '{0} at {1}'.format('Pressed' if pressed else 'Released',(x, y));
         # Output to console
         print(logMessage);
@@ -79,7 +80,7 @@ def on_scroll(x, y, dx, dy):
         return False;
     if(logging):
         # Check what time the action occurred
-        actionTime = time.time() - startTime;
+        actionTime = time.time() - startTime + runTime;
         logMessage = "Time: {}: ".format(actionTime) + 'Scrolled {0} at {1}'.format('down' if dy < 0 else 'up',(x, y));
         # Output to console
         print(logMessage);
@@ -105,6 +106,9 @@ def checkLogging():
         else:
             print("Not Logging\n");
             print("Timer Stopped\n");
+            # Adjust time that the program has been running
+            global runTime;
+            runTime =  runTime + time.time() - startTime;
 
 def checkQuit():
     if(keyboard.Key.ctrl in keysPressed and 'c' in keysPressed):
@@ -142,7 +146,7 @@ def on_press(key):
     # TODO add checkLogging function in
     # Send key to log
     if(logging):
-        actionTime = time.time() - startTime;
+        actionTime = time.time() - startTime + runTime;
         # if just started logging, say first keypress is at time 0
         if (actionTime < 0.001): actionTime = 0;
         timeLog = "Time: {}: ".format(actionTime);
@@ -184,7 +188,7 @@ def on_release(key):
         print("\n");
     # endDebug
     if(logging):
-        actionTime = time.time() - startTime;
+        actionTime = time.time() - startTime + runTime;
         logMessage = "Time: {}: ".format(actionTime) + '{0} released'.format(key);
         # Output to console
         print(logMessage);

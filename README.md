@@ -19,7 +19,6 @@ This project is not intended for use in any illegal or nefarious way, rather onl
 #### TODO:
 - Turn program into something that can be called from command line: "sudo python3 Logger.py -o outputFile"
 - Write program that can interpret input file logs and replicate from command line: "sudo python3 Automate.py -i inputFile -rep numberOfRepetitions"
-- Throw away timing while log isn't running
 - Logging includes pressing the x key and releasing control at the very beginning, which should be ignored
 - Writing characters with combinations like option-c (which outputs ç) and then letting go of option before c doesn't clear the ç character. Should letting go of the option key clear the entire keysPressed list? Should there be a track of how many keypresses before a key is released, and return an array with that many items cut from the end?
 - Encapsulate key and mouse loggers into single class?
