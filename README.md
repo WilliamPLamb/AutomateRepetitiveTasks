@@ -11,7 +11,7 @@ On Mac the keylogger portion needs sudo privileges to capture non-special charac
 - pynput
 
 ### Disclaimer
-This project is not intended for use in any illegal or nefarious way, rather only to provide a simple method of automating recurring, identical tasks.
+This project is not intended for use in any illegal or nefarious way, rather only to provide a simple method of automating recurring, identical tasks. Etc.
 
 ### Notes:
 - for an alphanumeric key, the `key` variable returns the key in single quotation marks, like `'a'`. For an alphanumeric key using `key.char` the key returns just as is, like `a`.
